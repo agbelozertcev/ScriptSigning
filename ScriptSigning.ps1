@@ -86,7 +86,6 @@ $window.Add_Loaded({
 })
 
 $cmbCerts.Add_DropDownClosed({
-
    
     $script:cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert | ? {$_.Thumbprint -eq $($cmbCerts.SelectedItem.Thumbprint)}
 
