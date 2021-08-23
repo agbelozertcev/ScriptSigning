@@ -1,10 +1,11 @@
 ﻿<Window
-
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-
-  Title="Script Signing" Height="536.933" Width="815">
+  Title="Script Signing" 
+  Height="540" 
+  Width="815"
+  ResizeMode="NoResize"
+  >
 
     <Grid HorizontalAlignment="Left" Height="454" Margin="10,15,0,0" VerticalAlignment="Top" Width="786" RenderTransformOrigin="0.462,0.552">
 
@@ -16,11 +17,11 @@
             <Grid HorizontalAlignment="Left" Height="152" Margin="0,1,-1.8,-10.6" VerticalAlignment="Top" Width="357">
                 <Label  Content="AccessToken:" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Width="163" Padding="1"/>
                 <TextBox x:Name="tbAccessToken" HorizontalAlignment="Left" Height="25" Margin="9,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Padding="0,2"/>
-                <Label  Content="Project name:" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" Width="165" Padding="1"/>
+                <Label  Content="Project name filter:" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" Width="165" Padding="1"/>
                 <TextBox x:Name="tbProjectName" HorizontalAlignment="Left" Height="25" Margin="10,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Padding="0,2,0,0"/>
                 <Label x:Name="lbResp" Content="" HorizontalAlignment="Left" Height="20" Margin="130,122,0,0" VerticalAlignment="Top" Width="49" Padding="1" FontSize="15"/>
                 <Button x:Name="btnConnect" Content="Connect" HorizontalAlignment="Left" Margin="243,25,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
-                <Button x:Name="btnGetPrj" Content="Get Project" HorizontalAlignment="Left" Height="25" Margin="243,114,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.428,0.523"/>
+                <Button x:Name="btnGetPrj" Content="Get and Clone" HorizontalAlignment="Left" Height="25" Margin="243,114,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.428,0.523"/>
                 <Label  Content="Project id:" HorizontalAlignment="Left" Margin="11,96,0,0" VerticalAlignment="Top" Width="165" Padding="1"/>
                 <TextBox x:Name="tbProjectid" HorizontalAlignment="Left" Height="25" Margin="10,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Padding="0,2,0,0"/>
             </Grid>
@@ -35,10 +36,10 @@
             </Grid>
         </GroupBox>
         <Label x:Name="label" Content="Output:" HorizontalAlignment="Left" Height="18" Margin="10,241,0,0" VerticalAlignment="Top" Width="120" Padding="1"/>
-        <Button x:Name="btnUpdPrj" Content="Update Project" HorizontalAlignment="Left" Margin="626,238,0,0" VerticalAlignment="Top" Width="150" Height="25"/>
+        <Button x:Name="btnUpdPrj" Content="Push changes" HorizontalAlignment="Left" Margin="626,238,0,0" VerticalAlignment="Top" Width="150" Height="25"/>
         <GroupBox x:Name="groupBox2" Header="Local store" HorizontalAlignment="Left" Height="63" Margin="10,0,0,0" VerticalAlignment="Top" Width="766">
             <Grid HorizontalAlignment="Left" Height="41" Margin="3,3,0,-3.2" VerticalAlignment="Top" Width="747">
-                <Label x:Name="label1" Content="Clone folder:" HorizontalAlignment="Left" Height="23" Margin="9,5,0,0" VerticalAlignment="Top" Width="69" Padding="1"/>
+                <Label x:Name="label1" Content="Working dir:" HorizontalAlignment="Left" Height="23" Margin="9,5,0,0" VerticalAlignment="Top" Width="69" Padding="1"/>
                 <TextBox x:Name="tbBasePath" HorizontalAlignment="Left" Height="25" Margin="84,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Padding="0,2,0,0"/>
                 <Button x:Name="btnClearLog" Content="Clear log" HorizontalAlignment="Left" Margin="690,5,0,0" VerticalAlignment="Top" Width="55" Height="25"/>
             </Grid>

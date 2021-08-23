@@ -9,6 +9,7 @@ $Version = "1.1"
 
 $env:GIT_REDIRECT_STDERR = '2>&1'
 
+# Load xaml
 [System.Reflection.Assembly]::LoadWithPartialName("PresentationFramework") | Out-Null
 
 [xml]$xaml  = Get-Content -Path $PSScriptRoot\Form.xaml
@@ -17,6 +18,7 @@ $manager.AddNamespace("x", "http://schemas.microsoft.com/winfx/2006/xaml");
 $xamlReader = New-Object System.Xml.XmlNodeReader $xaml
 $window     = [Windows.Markup.XamlReader]::Load($xamlReader)
 
+# Create variables by Name=
 $xaml.SelectNodes("//*[@*[contains(translate(name(.), 'n', 'N'), 'Name')]]") | ForEach-Object {
    New-Variable  -Name $_.Name -Value $Window.FindName($_.Name) -Force -ErrorAction SilentlyContinue -Scope Global
 }
@@ -38,14 +40,14 @@ $apiUrl = "http://gitlab.com/api/v4/projects"
  
 $rtbLog.IsReadOnly = $true
 
-
+# Loaded window handler 
 $window.Add_Loaded({
-
 
     $rtbLog.AppendText("========= Start ==============") 
 
     $rtbLog.AppendText("`n[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] Script version: $Version`n")
 
+    # Check git
     $gitver = & git --version
 
     if ($gitver -match "git version"){
@@ -61,8 +63,8 @@ $window.Add_Loaded({
         $rtbLog.ScrollToEnd()  
     }
 
+   # Get the code signing certs & paste them in the combobox items
    $script:cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert 
-
    
    $cmbCerts.ItemsSource = $script:cert
 
@@ -76,28 +78,30 @@ $window.Add_Loaded({
       
    $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] Selected certificarte: $(
         
-                if ($cmbCerts.SelectedItem.FriendlyName -eq ''){'Friendly name: --'}else{"Friendly name: $cmbCerts.SelectedItem.FriendlyName"};
-                "Thumbprint: $($cmbCerts.SelectedItem.Thumbprint)"
+                if ($cmbCerts.SelectedItem.FriendlyName -eq ''){'Friendly name: --'}else{"Friendly name: $cmbCerts.SelectedItem.FriendlyName"}
+                "; Thumbprint: $($cmbCerts.SelectedItem.Thumbprint)"
    )`n")
    
    $rtbLog.ScrollToEnd()
 })
 
+# Combobox dropdown handler
 $cmbCerts.Add_DropDownClosed({
    
     $script:cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert | ? {$_.Thumbprint -eq $($cmbCerts.SelectedItem.Thumbprint)}
 
-    $rtbLog.AppendText("========= Cert ==============`n")
+    $rtbLog.AppendText("`n========= Cert ==============`n")
 
     $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] Selected certificate: $(
         
-                if ($cmbCerts.SelectedItem.FriendlyName -eq ''){'Friendly name: --'}else{"Friendly name: $($cmbCerts.SelectedItem.FriendlyName)"};
-                "Thumbprint: $($cmbCerts.SelectedItem.Thumbprint)"
+                if ($cmbCerts.SelectedItem.FriendlyName -eq ''){'Friendly name: --'}else{"Friendly name: $($cmbCerts.SelectedItem.FriendlyName)"}
+                "; Thumbprint: $($cmbCerts.SelectedItem.Thumbprint)"
     )`n")
 
    $rtbLog.ScrollToEnd()
 }) 
 
+# Connect button handler
 $btnConnect.Add_Click({
 
     $rtbLog.AppendText("========= Connect =============`n") 
@@ -127,6 +131,7 @@ $btnConnect.Add_Click({
 
 })
 
+# FindPrj button click handler
 $btnFindPrj.Add_Click({
 
       $rtbLog.AppendText("========= Projects =============`n") 
@@ -139,17 +144,19 @@ $btnFindPrj.Add_Click({
       $rtbLog.ScrollToEnd()   
 })
 
+# GetPrj button click handler
 $btnGetPrj.Add_Click({
 
     $rtbLog.AppendText("========= Project: $ProjectId =============`n") 
 
     $script:prj | ? {$_.id -eq $ProjectId} | ForEach-Object {
 
-        $name =  $_.name
+        #$name =  $_.name
         $namespace=  $_.path_with_namespace.Replace('`\','/')
         $script:url = $_.http_url_to_repo
         $script:scrtemp = join-path $script:basePath $namespace
 
+        # Create a local folder if it is not exist
         if (!(Test-Path -Path $basePath -ErrorAction SilentlyContinue)){
 
             New-Item -ItemType Directory -Path $basePath -Force
@@ -157,6 +164,7 @@ $btnGetPrj.Add_Click({
             $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $basePath created.`n")
         }
 
+        # Clear the folder if it is not empty
         if (Test-Path -Path $script:scrtemp -ErrorAction SilentlyContinue){
 
              $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $script:scrtemp is not empty. It will be removed`n")
@@ -166,52 +174,56 @@ $btnGetPrj.Add_Click({
              $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $script:scrtemp removed`n")
         }
 
-         Invoke-Command { git clone $script:url $script:scrtemp} 
+        # Clone repo
+        Invoke-Command { git clone $script:url $script:scrtemp} 
+        
+        # Check the content
+        if (Test-Path -Path $script:scrtemp -ErrorAction SilentlyContinue){
 
-          
-         if (Test-Path -Path $script:scrtemp -ErrorAction SilentlyContinue){
-
-            $res = Invoke-Command { git remote add upstream $script:url} 
+            # Add upstream
+            Invoke-Command {git remote add upstream $script:url} 
                                         
             $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] Cloned: $($script:url) ---> $($script:scrtemp)`n")  
-          }
+        }
 
      } 
 
      $rtbLog.ScrollToEnd()   
      
- })
+})
 
+# UpdPrj button click handler
 $btnUpdPrj.Add_Click({
 
         $rtbLog.AppendText("========= Project update =============`n") 
 
-          Set-Location $script:scrtemp
+        Set-Location $script:scrtemp
 
-          Get-ChildItem -path $script:scrtemp -Filter "*.ps1" | % {
+        # Get *.ps1 files and add changes in the working directory
+        Get-ChildItem -path $script:scrtemp -Filter "*.ps1" | % {
 
-             Invoke-Command {git add $($_.name) } 
+            Invoke-Command {git add $($_.name) } 
           
-             $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] git add --> $($_.name) added `n")
- 
-          }
+            $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] git add --> $($_.name) added `n")
+        }
           
-          $res = Invoke-Command {git commit --message "[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] - scripts signed"}
+        # Add commit message
+        $res = Invoke-Command {git commit --message "[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] - scripts signed"}
 
-          $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] git commit --> $res`n")
+        $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] git commit --> $res`n")
+        
+        # Push
+        $res = Invoke-Command {git push}
 
-          $res = Invoke-Command {git push}
+        $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] git push --> $res`n")
 
-          $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] git push --> $res`n")
+        $rtbLog.AppendText("========= Project updated =============`n") 
 
-          $rtbLog.AppendText("========= Project updated =============`n") 
-
-          $rtbLog.ScrollToEnd()  
-
+        $rtbLog.ScrollToEnd()  
 })
 
+# Sign button click handler
 $btnSign.Add_Click({
-
 
     $rtbLog.AppendText("========= Signing =============`n") 
 
@@ -222,6 +234,7 @@ $btnSign.Add_Click({
        if ($res){
 
          $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $($res.SignerCertificate.Thumbprint) -> $($res.Path) : $($res.Status)`n")
+         
        }
 
      }
@@ -229,6 +242,7 @@ $btnSign.Add_Click({
      $rtbLog.ScrollToEnd()
 })
 
+# CertInfo button click handler 
 $btnCertInfo.Add_Click({
 
    $rtbLog.AppendText("========= Cert =============`n") 
@@ -244,6 +258,7 @@ $btnCertInfo.Add_Click({
 
 })
 
+# ClearLog button click handlwe
 $btnClearLog.Add_Click({
 
     $rtbLog.Document.Blocks.Clear()
@@ -251,7 +266,7 @@ $btnClearLog.Add_Click({
     $rtbLog.ScrollToEnd() 
 })
 
-
+# BasePath textbox changed handler
 $tbBasePath.Add_TextChanged({
     
     $script:i++
@@ -266,6 +281,7 @@ $tbBasePath.Add_TextChanged({
     $rtbLog.ScrollToEnd()
 })
 
+# ProjectName textbox changed handler
 $tbProjectName.Add_TextChanged({
 
     $script:j++
@@ -280,6 +296,7 @@ $tbProjectName.Add_TextChanged({
     $rtbLog.ScrollToEnd()
 })
 
+# Show window
 $window.ShowDialog()
 
 
