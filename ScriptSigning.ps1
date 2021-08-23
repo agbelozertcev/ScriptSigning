@@ -5,11 +5,9 @@
     Version 1.0 - Initial
 #>
 
-
 $Version = "1.1"
 
 $env:GIT_REDIRECT_STDERR = '2>&1'
-
 
 [System.Reflection.Assembly]::LoadWithPartialName("PresentationFramework") | Out-Null
 
