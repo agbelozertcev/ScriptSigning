@@ -1,6 +1,8 @@
 ﻿<#
+    Prereq https://github.com/git-for-windows/git/releases/download/v2.33.0.windows.1/Git-2.33.0-64-bit.exe
 
-
+    Version 1.1 - Some typos fixed
+    Version 1.0 - Initial
 #>
 
 
@@ -88,6 +90,8 @@ $cmbCerts.Add_DropDownClosed({
    
     $script:cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert | ? {$_.Thumbprint -eq $($cmbCerts.SelectedItem.Thumbprint)}
 
+    $rtbLog.AppendText("========= Cert ==============`n")
+
     $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] Selected certificate: $(
         
                 if ($cmbCerts.SelectedItem.FriendlyName -eq ''){'Friendly name: --'}else{"Friendly name: $($cmbCerts.SelectedItem.FriendlyName)"};
@@ -158,11 +162,11 @@ $btnGetPrj.Add_Click({
 
         if (Test-Path -Path $script:scrtemp -ErrorAction SilentlyContinue){
 
-             $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $script:scrtemp is not empty. It will remove.`n")
+             $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $script:scrtemp is not empty. It will be removed`n")
                 
              Remove-Item -Path $script:scrtemp -Force -Recurse
 
-             $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $script:scrtemp removed.`n")
+             $rtbLog.AppendText("[$(Get-date -format "dd.MM.yyyy HH:mm:ss")] $script:scrtemp removed`n")
         }
 
          Invoke-Command { git clone $script:url $script:scrtemp} 

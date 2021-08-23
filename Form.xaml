@@ -29,9 +29,10 @@
         <Button x:Name="btnFindPrj" Content="Find Project" HorizontalAlignment="Left" Margin="260,159,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
         <GroupBox x:Name="groupBox1" Header="Certificate" HorizontalAlignment="Left" Height="165" Margin="393,70,0,0" VerticalAlignment="Top" Width="383">
             <Grid HorizontalAlignment="Left" Height="146" Margin="0,0,-1.8,-3.6" VerticalAlignment="Top" Width="373">
-                <Button x:Name="btnSign" Content="Sign files" HorizontalAlignment="Left" Margin="132,111,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
-                <Button x:Name="btnCertInfo" Content="Cert Info" HorizontalAlignment="Left" Margin="265,32,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
-                <ComboBox x:Name="cmbCerts" HorizontalAlignment="Left" Margin="19,32,0,0" VerticalAlignment="Top" Width="220" Height="25"/>
+                <Button x:Name="btnSign" Content="Sign files" HorizontalAlignment="Left" Margin="132,110,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
+                <Button x:Name="btnCertInfo" Content="Cert Info" HorizontalAlignment="Left" Margin="265,25,0,0" VerticalAlignment="Top" Width="100" Height="25"/>
+                <Label  Content="Choose cert:" HorizontalAlignment="Left" Margin="19,6,0,0" VerticalAlignment="Top" Width="165" Padding="1"/>
+                <ComboBox x:Name="cmbCerts" HorizontalAlignment="Left" Margin="19,25,0,0" VerticalAlignment="Top" Width="220" Height="25"/>
             </Grid>
         </GroupBox>
         <Label x:Name="label" Content="Output:" HorizontalAlignment="Left" Height="18" Margin="10,241,0,0" VerticalAlignment="Top" Width="120" Padding="1"/>
@@ -40,7 +41,7 @@
             <Grid HorizontalAlignment="Left" Height="41" Margin="3,3,0,-3.2" VerticalAlignment="Top" Width="747">
                 <Label x:Name="label1" Content="Clone folder:" HorizontalAlignment="Left" Height="23" Margin="9,5,0,0" VerticalAlignment="Top" Width="69" Padding="1"/>
                 <TextBox x:Name="tbBasePath" HorizontalAlignment="Left" Height="25" Margin="84,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Padding="0,2,0,0"/>
-                <Button x:Name="btnClearLog" Content="Clear log" HorizontalAlignment="Left" Margin="670,5,0,0" VerticalAlignment="Top" Width="70" Height="25"/>
+                <Button x:Name="btnClearLog" Content="Clear log" HorizontalAlignment="Left" Margin="690,5,0,0" VerticalAlignment="Top" Width="55" Height="25"/>
             </Grid>
         </GroupBox>
     </Grid>
